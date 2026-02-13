@@ -1,0 +1,40 @@
+# AI Agent default .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+venv/
+.venv/
+*.egg-info/
+
+# Node
+node_modules/
+npm-debug.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Environment settings
+.env
+.env.local
+*.local
+
+# Build
+build/
+dist/
+*.egg
+
+# Tests
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ProjectHub metadata (AI Agent logs, docs, screenshots, snapshots, etc.)
+.projecthub/
+vibe_state.json
