@@ -321,6 +321,17 @@
     outline-offset: 2px;
   }
 
+  /* ── Title ─────────────────────────────────── */
+  .calc-title {
+    text-align: center;
+    margin-bottom: 16px;
+    font-family: var(--font-ui);
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+  }
+
   /* ── Brand mark ───────────────────────────── */
   .brand {
     text-align: center;
@@ -337,6 +348,7 @@
 <body>
 
 <div class="calculator">
+  <div class="calc-title">공학용계산기</div>
   <div class="display">
     <div class="expression" id="expression"></div>
     <div class="value" id="display">0</div>
