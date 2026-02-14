@@ -548,3 +548,422 @@ describe('13. Edge Cases', () => {
     expect(getDisplay()).toBe('3');
   });
 });
+
+// ────────────────────────────────────────────────────────
+// 14. Trigonometric Functions
+// ────────────────────────────────────────────────────────
+describe('14. Trigonometric Functions', () => {
+  test('14.1 sin(30) = 0.5 in Deg mode', () => {
+    // Default angle mode is deg (button shows "Rad")
+    typeNumber('30');
+    pressAction('sin');
+    expect(parseFloat(getDisplay())).toBeCloseTo(0.5, 10);
+  });
+
+  test('14.2 cos(60) = 0.5 in Deg mode', () => {
+    typeNumber('60');
+    pressAction('cos');
+    expect(parseFloat(getDisplay())).toBeCloseTo(0.5, 10);
+  });
+
+  test('14.3 tan(45) = 1 in Deg mode', () => {
+    typeNumber('45');
+    pressAction('tan');
+    expect(parseFloat(getDisplay())).toBeCloseTo(1, 10);
+  });
+
+  test('14.4 sin(0) = 0', () => {
+    // currentValue is already '0' on load
+    pressAction('sin');
+    expect(getDisplay()).toBe('0');
+  });
+
+  test('14.5 Angle mode toggle: button shows "Rad" initially, changes to "Deg" after toggle', () => {
+    const btn = document.querySelector('[data-action="angle-mode"]');
+    expect(btn.textContent).toBe('Rad');
+    pressAction('angle-mode');
+    expect(btn.textContent).toBe('Deg');
+  });
+
+  test('14.6 sin(pi/6) approx 0.5 in Rad mode', () => {
+    // Toggle to Rad mode
+    pressAction('angle-mode');
+    // Insert pi
+    pressAction('pi');
+    // Divide by 6
+    pressOp('÷');
+    pressNum('6');
+    pressAction('equal');
+    // Now take sin of the result
+    pressAction('sin');
+    expect(parseFloat(getDisplay())).toBeCloseTo(0.5, 5);
+  });
+
+  test('14.7 Expression shows "sin(30)" after sin(30)', () => {
+    typeNumber('30');
+    pressAction('sin');
+    expect(getExpression()).toBe('sin(30)');
+  });
+});
+
+// ────────────────────────────────────────────────────────
+// 15. Log & Exponential Functions
+// ────────────────────────────────────────────────────────
+describe('15. Log & Exponential Functions', () => {
+  test('15.1 ln(1) = 0', () => {
+    pressNum('1');
+    pressAction('ln');
+    expect(getDisplay()).toBe('0');
+  });
+
+  test('15.2 log10(100) = 2', () => {
+    typeNumber('100');
+    pressAction('log10');
+    expect(getDisplay()).toBe('2');
+  });
+
+  test('15.3 exp(1) approx 2.71828', () => {
+    pressNum('1');
+    pressAction('exp');
+    expect(parseFloat(getDisplay())).toBeCloseTo(Math.E, 5);
+  });
+
+  test('15.4 10^3 = 1000', () => {
+    pressNum('3');
+    pressAction('exp10');
+    expect(getDisplay()).toBe('1000');
+  });
+
+  test('15.5 ln(0) = Error', () => {
+    // Display starts at '0', press ln
+    pressAction('ln');
+    expect(getDisplay()).toBe('Error');
+  });
+});
+
+// ────────────────────────────────────────────────────────
+// 16. Power & Root Functions
+// ────────────────────────────────────────────────────────
+describe('16. Power & Root Functions', () => {
+  test('16.1 x^2: 7^2 = 49', () => {
+    pressNum('7');
+    pressAction('square');
+    expect(getDisplay()).toBe('49');
+  });
+
+  test('16.2 x^3: 3^3 = 27', () => {
+    pressNum('3');
+    pressAction('cube');
+    expect(getDisplay()).toBe('27');
+  });
+
+  test('16.3 sqrt(16) = 4', () => {
+    typeNumber('16');
+    pressAction('sqrt');
+    expect(getDisplay()).toBe('4');
+  });
+
+  test('16.4 cbrt(27) = 3', () => {
+    typeNumber('27');
+    pressAction('cbrt');
+    expect(getDisplay()).toBe('3');
+  });
+
+  test('16.5 x^y binary: 2^10 = 1024', () => {
+    pressNum('2');
+    pressAction('pow');
+    typeNumber('10');
+    pressAction('equal');
+    expect(getDisplay()).toBe('1024');
+  });
+
+  test('16.6 y-root-x binary: 27 yroot 3 = 3', () => {
+    typeNumber('27');
+    pressAction('yroot');
+    pressNum('3');
+    pressAction('equal');
+    expect(getDisplay()).toBe('3');
+  });
+
+  test('16.7 sqrt(-5) = Error', () => {
+    pressNum('5');
+    pressAction('sign');
+    pressAction('sqrt');
+    expect(getDisplay()).toBe('Error');
+  });
+
+  test('16.8 Expression shows "square(7)" after x^2(7)', () => {
+    pressNum('7');
+    pressAction('square');
+    expect(getExpression()).toBe('square(7)');
+  });
+});
+
+// ────────────────────────────────────────────────────────
+// 17. Utility Functions & Constants
+// ────────────────────────────────────────────────────────
+describe('17. Utility Functions & Constants', () => {
+  test('17.1 1/x: 1/4 = 0.25', () => {
+    pressNum('4');
+    pressAction('reciprocal');
+    expect(getDisplay()).toBe('0.25');
+  });
+
+  test('17.2 1/0 = Error', () => {
+    // Display starts at '0', press reciprocal
+    pressAction('reciprocal');
+    expect(getDisplay()).toBe('Error');
+  });
+
+  test('17.3 5! = 120', () => {
+    pressNum('5');
+    pressAction('factorial');
+    expect(getDisplay()).toBe('120');
+  });
+
+  test('17.4 0! = 1', () => {
+    // Display starts at '0'
+    pressAction('factorial');
+    expect(getDisplay()).toBe('1');
+  });
+
+  test('17.5 pi inserts approx 3.14159', () => {
+    pressAction('pi');
+    expect(parseFloat(getDisplay())).toBeCloseTo(Math.PI, 5);
+  });
+
+  test('17.6 e inserts approx 2.71828', () => {
+    pressAction('euler');
+    expect(parseFloat(getDisplay())).toBeCloseTo(Math.E, 5);
+  });
+
+  test('17.7 Rand inserts number between 0 and 1', () => {
+    pressAction('rand');
+    const val = parseFloat(getDisplay());
+    expect(val).toBeGreaterThanOrEqual(0);
+    expect(val).toBeLessThan(1);
+  });
+
+  test('17.8 EE: 5 EE 3 = 5000', () => {
+    pressNum('5');
+    pressAction('ee');
+    pressNum('3');
+    pressAction('equal');
+    expect(getDisplay()).toBe('5000');
+  });
+
+  test('17.9 Constant after operator: 2 * pi approx 6.283', () => {
+    pressNum('2');
+    pressOp('×');
+    pressAction('pi');
+    pressAction('equal');
+    expect(parseFloat(getDisplay())).toBeCloseTo(2 * Math.PI, 3);
+  });
+});
+
+// ────────────────────────────────────────────────────────
+// 18. Memory Functions
+// ────────────────────────────────────────────────────────
+describe('18. Memory Functions', () => {
+  test('18.1 m+ stores and mr recalls', () => {
+    typeNumber('42');
+    pressAction('mplus');
+    pressAction('clear');
+    pressAction('mr');
+    expect(getDisplay()).toBe('42');
+  });
+
+  test('18.2 m+ accumulates: 10 + 20 = 30', () => {
+    typeNumber('10');
+    pressAction('mplus');
+    pressAction('clear');
+    typeNumber('20');
+    pressAction('mplus');
+    pressAction('clear');
+    pressAction('mr');
+    expect(getDisplay()).toBe('30');
+  });
+
+  test('18.3 m- subtracts: 50 - 20 = 30', () => {
+    typeNumber('50');
+    pressAction('mplus');
+    pressAction('clear');
+    typeNumber('20');
+    pressAction('mminus');
+    pressAction('clear');
+    pressAction('mr');
+    expect(getDisplay()).toBe('30');
+  });
+
+  test('18.4 mc clears memory: 99 m+, mc, mr = 0', () => {
+    typeNumber('99');
+    pressAction('mplus');
+    pressAction('mc');
+    pressAction('clear');
+    pressAction('mr');
+    expect(getDisplay()).toBe('0');
+  });
+});
+
+// ────────────────────────────────────────────────────────
+// 19. 2nd Mode & Inverse Functions
+// ────────────────────────────────────────────────────────
+describe('19. 2nd Mode & Inverse Functions', () => {
+  test('19.1 2nd toggle: button gets active-second class', () => {
+    const btn = document.querySelector('[data-action="second"]');
+    expect(btn.classList.contains('active-second')).toBe(false);
+    pressAction('second');
+    expect(btn.classList.contains('active-second')).toBe(true);
+  });
+
+  test('19.2 sin^-1(0.5) = 30 in Deg mode', () => {
+    pressNum('0');
+    pressNum('.');
+    pressNum('5');
+    pressAction('second');
+    pressAction('sin');
+    expect(parseFloat(getDisplay())).toBeCloseTo(30, 5);
+  });
+
+  test('19.3 cos^-1(0.5) = 60 in Deg mode', () => {
+    pressNum('0');
+    pressNum('.');
+    pressNum('5');
+    pressAction('second');
+    pressAction('cos');
+    expect(parseFloat(getDisplay())).toBeCloseTo(60, 5);
+  });
+
+  test('19.4 tan^-1(1) = 45 in Deg mode', () => {
+    pressNum('1');
+    pressAction('second');
+    pressAction('tan');
+    expect(parseFloat(getDisplay())).toBeCloseTo(45, 5);
+  });
+
+  test('19.5 2nd auto-deactivates after use', () => {
+    pressNum('1');
+    pressAction('second');
+    const btn = document.querySelector('[data-action="second"]');
+    expect(btn.classList.contains('active-second')).toBe(true);
+    pressAction('sin');
+    // 2nd mode should be off now
+    expect(btn.classList.contains('active-second')).toBe(false);
+  });
+
+  test('19.6 sinh(1) works', () => {
+    pressNum('1');
+    pressAction('sinh');
+    expect(parseFloat(getDisplay())).toBeCloseTo(Math.sinh(1), 5);
+  });
+
+  test('19.7 2nd + sinh = sinh^-1: roundtrip gives back 1', () => {
+    pressNum('1');
+    pressAction('sinh');
+    // Now display has sinh(1). Apply inverse.
+    pressAction('second');
+    pressAction('sinh');
+    expect(parseFloat(getDisplay())).toBeCloseTo(1, 5);
+  });
+});
+
+// ────────────────────────────────────────────────────────
+// 20. Parentheses
+// ────────────────────────────────────────────────────────
+describe('20. Parentheses', () => {
+  test('20.1 (2+3) * 4 = 20', () => {
+    pressAction('paren-open');
+    pressNum('2');
+    pressOp('+');
+    pressNum('3');
+    pressAction('paren-close');
+    pressOp('×');
+    pressNum('4');
+    pressAction('equal');
+    expect(getDisplay()).toBe('20');
+  });
+
+  test('20.2 Simple (5) = 5', () => {
+    pressAction('paren-open');
+    pressNum('5');
+    pressAction('paren-close');
+    expect(getDisplay()).toBe('5');
+  });
+
+  test('20.3 Nested ((2+3)) * 2 = 10', () => {
+    pressAction('paren-open');
+    pressAction('paren-open');
+    pressNum('2');
+    pressOp('+');
+    pressNum('3');
+    pressAction('paren-close');
+    pressAction('paren-close');
+    pressOp('×');
+    pressNum('2');
+    pressAction('equal');
+    expect(getDisplay()).toBe('10');
+  });
+
+  test('20.4 3 * (4+5) = 27', () => {
+    pressNum('3');
+    pressOp('×');
+    pressAction('paren-open');
+    pressNum('4');
+    pressOp('+');
+    pressNum('5');
+    pressAction('paren-close');
+    pressAction('equal');
+    expect(getDisplay()).toBe('27');
+  });
+});
+
+// ────────────────────────────────────────────────────────
+// 21. Scientific Integration Tests
+// ────────────────────────────────────────────────────────
+describe('21. Scientific Integration Tests', () => {
+  test('21.1 sin(30) + cos(60) = 1', () => {
+    typeNumber('30');
+    pressAction('sin');
+    pressOp('+');
+    typeNumber('60');
+    pressAction('cos');
+    pressAction('equal');
+    expect(parseFloat(getDisplay())).toBeCloseTo(1, 10);
+  });
+
+  test('21.2 sqrt(x^2) identity: sqrt(49) gives 7', () => {
+    pressNum('7');
+    pressAction('square');  // 49
+    pressAction('sqrt');    // 7
+    expect(getDisplay()).toBe('7');
+  });
+
+  test('21.3 ln(exp) identity: exp(1) then ln gives 1', () => {
+    pressNum('1');
+    pressAction('exp');     // e^1 ~ 2.71828
+    pressAction('ln');      // ln(e) = 1
+    expect(parseFloat(getDisplay())).toBeCloseTo(1, 10);
+  });
+
+  test('21.4 Memory with scientific: sin(30) then m+, clear, mr = 0.5', () => {
+    typeNumber('30');
+    pressAction('sin');
+    pressAction('mplus');
+    pressAction('clear');
+    pressAction('mr');
+    expect(parseFloat(getDisplay())).toBeCloseTo(0.5, 10);
+  });
+
+  test('21.5 Clear resets paren stack: paren-open, 5, clear, then 3+2 = 5', () => {
+    pressAction('paren-open');
+    pressNum('5');
+    pressAction('clear');
+    expect(getDisplay()).toBe('0');
+
+    pressNum('3');
+    pressOp('+');
+    pressNum('2');
+    pressAction('equal');
+    expect(getDisplay()).toBe('5');
+  });
+});
